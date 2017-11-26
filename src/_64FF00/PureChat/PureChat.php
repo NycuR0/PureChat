@@ -162,55 +162,66 @@ class PureChat extends PluginBase
 
 
             case "setprefix":
-
-                if(!$sender instanceof Player)
-                {
-                    $sender->sendMessage(TextFormat::GREEN . self::MAIN_PREFIX . " This command can be only used in-game.");
-
-                    return true;
-                }
+		$playerPrefix = $this->getServer()->getPlayer($args[1]);
 
                 if(!isset($args[0]))
                 {
-                    $sender->sendMessage(TextFormat::GREEN . self::MAIN_PREFIX . " Usage: /setprefix <prefix>");
+                    $sender->sendMessage(TextFormat::GREEN . self::MAIN_PREFIX . " Usage: /setprefix <prefix> <player>");
+
+                    return true;
+                }
+		
+		if(!isset($args[1]))
+                {
+                    $sender->sendMessage(TextFormat::GREEN . self::MAIN_PREFIX . " You don't set Player Name!");
 
                     return true;
                 }
 
                 $levelName = $this->config->get("enable-multiworld-chat") ? $sender->getLevel()->getName() : null;
 
-                $prefix = str_replace("{BLANK}", ' ', implode('', $args));
+                $prefix = str_replace("{BLANK}", ' ', implode('', $args[0]));
 
-                $this->setPrefix($prefix, $sender, $levelName);
+                $this->setPrefix($prefix, $playerPrefix, $levelName);
 
-                $sender->sendMessage(TextFormat::GREEN . self::MAIN_PREFIX . " You set your prefix to " . $prefix . ".");
+		if ($playerSuffix->isOnline()){
+			$playerPrefix->sendMessage(TextFormat::GREEN . self::MAIN_PREFIX . " You set your suffix to " . $suffix . ".");
+			$sender->sendMessage(TextFormat::GREEN . self::MAIN_PREFIX . " You set suffix to " . $suffix . "of player" $args[1]);
+		} else {
+			$sender->sendMessage(TextFormat::GREEN . self::MAIN_PREFIX . " You set suffix to " . $suffix . "of player" $args[1]);
+		}
 
                 break;
 
             case "setsuffix":
-
-                if(!$sender instanceof Player)
-                {
-                    $sender->sendMessage(TextFormat::GREEN . self::MAIN_PREFIX . " This command can be only used in-game.");
-
-                    return true;
-                }
+		$playerSuffix = $this->getServer()->getPlayer($args[1]);
 
                 if(!isset($args[0]))
                 {
-                    $sender->sendMessage(TextFormat::GREEN . self::MAIN_PREFIX . " Usage: /setsuffix <suffix>");
+                    $sender->sendMessage(TextFormat::GREEN . self::MAIN_PREFIX . " Usage: /setsuffix <suffix> <player>");
+
+                    return true;
+                }
+	
+		if(!isset($args[1]))
+                {
+                    $sender->sendMessage(TextFormat::GREEN . self::MAIN_PREFIX . " You don't set Player Name!");
 
                     return true;
                 }
 
                 $levelName = $this->config->get("enable-multiworld-chat") ? $sender->getLevel()->getName() : null;
 
-                $suffix = str_replace("{BLANK}", ' ', implode('', $args));
+                $suffix = str_replace("{BLANK}", ' ', implode('', $args[0]));
 
-                $this->setSuffix($suffix, $sender, $levelName);
+                $this->setSuffix($suffix, $playerSuffix, $levelName);
 
-                $sender->sendMessage(TextFormat::GREEN . self::MAIN_PREFIX . " You set your suffix to " . $suffix . ".");
-
+		if ($playerSuffix->isOnline()){
+			$playerSuffix->sendMessage(TextFormat::GREEN . self::MAIN_PREFIX . " You set your suffix to " . $suffix . ".");
+			$sender->sendMessage(TextFormat::GREEN . self::MAIN_PREFIX . " You set suffix to " . $suffix . "of player" $args[1]);
+		} else {
+			$sender->sendMessage(TextFormat::GREEN . self::MAIN_PREFIX . " You set suffix to " . $suffix . "of player" $args[1]);
+		}
                 break;
         }
 
